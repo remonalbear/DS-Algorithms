@@ -63,19 +63,24 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     	{
     		throw new NoSuchElementException();
     	}
+    	Item removed=null;
     	if (N == 1) //corner case when one element left
     	{
-        	Item removed= queue[0];
-        	N--;
-        	queue[0]= null;
-        	
-        	return removed;
+        	removed= queue[0];
     	}
-    	int randIndex= StdRandom.uniform(N-1);
-    	swap(randIndex);
-    	Item removed= queue[N-1];
+    	else
+    	{
+        	int randIndex= StdRandom.uniform(1,N+1);
+        	swap(randIndex-1);
+        	removed= queue[N-1];    		
+    	}
+
     	N--;
     	queue[N]= null;
+    	if (N>0 && N == queue.length / 4)
+    	{
+    		resize(queue.length/2);
+    	}
     	
     	return removed;
     	
@@ -91,8 +96,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     	{
     		return queue[0];
     	}
-    	int randIndex= StdRandom.uniform(N-1);
-    	return queue[randIndex];
+    	int randIndex= StdRandom.uniform(1,N+1);
+    	return queue[randIndex-1];
     	
     }
     public String toString()
@@ -112,7 +117,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     	private Item[] shuffled;
     	public RandomIterator()
     	{
-    		shuffled=queue.clone();
+    		shuffled=(Item[]) new Object[i];
+    		for(int j=0;j<N ;j++)
+    		{
+    			shuffled[j]=queue[j];
+    		}
     		StdRandom.shuffle(shuffled);
     	}
 
@@ -126,6 +135,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 		@Override
 		public Item next() {
 			// TODO Auto-generated method stub
+	    	if(i < 1)
+	    	{
+	    		throw new NoSuchElementException();
+	    	}
 			return shuffled[--i];
 		}
     	@Override
@@ -147,17 +160,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     {
     	RandomizedQueue<Integer> q= new RandomizedQueue<Integer>();
     	q.enqueue(10);
+    	q.enqueue(11);
+    	q.enqueue(15);
     	q.enqueue(17);
-    	q.enqueue(12);
-    	q.enqueue(23);
-    	q.enqueue(75);
-    	q.enqueue(94);
-    	q.enqueue(54);
-    	q.enqueue(64);
-    	System.out.println(q);
-    	for(Integer i : q)
-    	{
-    		System.out.println(i);
-    	}
+	    for(int i =0;i< 1000000;i++)
+	    {
+	    	q.enqueue(i);
+	
+	    }
+	    for(int i =0;i< 1000000;i++)
+	    {
+	    	System.out.println(q.dequeue());
+	
+	    }
     }
 }
