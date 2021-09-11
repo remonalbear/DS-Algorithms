@@ -44,46 +44,45 @@ public class FastCollinearPoints {
 			int maxCount = 0;
 			int index = 0;
 			for (int j = 2; j < pointsData.length; j++) {
-//				System.out.println("Point p:"+p+" has slope to point t :"+pointsCopy[j]+" = "+p.slopeTo(pointsCopy[j]));
 				//count three or more consecutive points
 				if (p.slopeTo(pointsCopy[j]) == p.slopeTo(pointsCopy[j-1])) {
 					
 					count++;
 					index = j;
-//					System.out.println("we found three : with count = "+count +" at max index = "+index);
+
 				}
 				else { // we have to re check here with max count
 					if (count > maxCount) {
 						maxCount = count;
 					}
-					count = 0;
-//					System.out.println("we broke the sequence : with count = "+count +" at max index = "+index);
-					
+					count = 0;			
 					if (maxCount >= 2) {
-						if (p.compareTo(pointsCopy[index-maxCount]) < 0) {
-//							System.out.println("Compare point: " + p + " with: "+pointsCopy[index-maxCount]+" at "+ (index-maxCount)+" equals: " +p.compareTo(pointsCopy[index-maxCount]));
+						if (p.compareTo(pointsCopy[index-maxCount]) <= 0) {
 							segments.push(new LineSegment(p,pointsCopy[index]));
 							num++;
-//							System.out.println("Line at min ->   : with count = "+maxCount +" at max index = "+index);
 						}
 						maxCount=0;
-//						else if((p.compareTo(pointsCopy[index-maxCount]) > 0) && (p.compareTo(pointsCopy[index]) > 0)){
-//							segments.push(new LineSegment(p,pointsCopy[index-maxCount]));
-//							num++;	
-//							System.out.println("Line at max ->   : with count = "+maxCount +" at max index = "+index);
-//						}			
-						//System.out.println("slope to the point at "+ index +" : "+ p.compareTo(pointsCopy[index])+" slope to the point at "+ (index-maxCount) +" : "+ p.compareTo(pointsCopy[index-maxCount]) );
 					}
 				}
 				// if p is the largest or the lowest -> done
 			}
+			if (count > maxCount) {
+				maxCount = count;
+			}
+			if (maxCount >= 2) {
+				if (p.compareTo(pointsCopy[index-maxCount]) <= 0) {
+					segments.push(new LineSegment(p,pointsCopy[index]));
+					num++;
+				}
+			}
+			
 			
 
 			
 
 		}
 		
-			lines =new LineSegment[num];
+		   lines =new LineSegment[num];
 		   for(int i = 0; i < num; i++ ) { // copy the segments
 			   lines[i] = segments.pop();
 		   }
